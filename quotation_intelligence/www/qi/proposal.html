@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ proposal.proposal_title or "Proposal" }} — {{ proposal.client_name or "" }}</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand:       {{ proposal.primary_color or "#1591AB" }};
+      --accent:      {{ proposal.accent_color  or "#22b5d4" }};
+      --brand-light: color-mix(in srgb, var(--brand) 12%, transparent);
+      --r: 14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f2f5f8;
+      color: #101e2b;
+      line-height: 1.6;
+    }
+
+    /* ── Sticky header ──────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo { height: 32px; width: auto; }
+    .topbar-title { font-size: 15px; font-weight: 600; color: #0f172a; }
+    .topbar-right { display: flex; gap: 10px; }
+
+    /* ── Progress bar ───────────────────────────────────────────── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 100;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      width: 0%; transition: width 0.1s linear;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0f2a42 100%);
+      color: white;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(21,145,171,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21,145,171,0.06) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(21,145,171,0.15);
+      border: 1px solid rgba(21,145,171,0.35);
+      border-radius: 40px;
+      padding: 4px 14px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      color: var(--accent); text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+    .hero-sub {
+      font-size: 1.05rem; color: rgba(255,255,255,0.55);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .hero-stats {
+      display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .stat { padding: 1rem 2rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
+    .stat:last-child { border-right: none; }
+    .stat-val { font-size: 1.5rem; font-weight: 700; color: white; font-variant-numeric: tabular-nums; }
+    .stat-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+                color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 2px; }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+    .sections  { padding: 3rem 0 6rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ── Section card ───────────────────────────────────────────── */
+    .section-card {
+      background: white;
+      border-radius: var(--r);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      overflow: hidden;
+      border: 1px solid #e8edf2;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #f0f4f8;
+      background: #fafbfc;
+    }
+    .section-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: var(--brand-light);
+      color: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .section-title { font-size: 16px; font-weight: 600; color: #0f172a; }
+    .section-body  { padding: 1.5rem; }
+    .section-body p        { margin-bottom: 0.9rem; color: #334155; }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body h3       { font-size: 15px; font-weight: 600; margin: 1rem 0 0.4rem; color: #0f172a; }
+    .section-body ul, .section-body ol { padding-left: 1.4rem; margin-bottom: 0.8rem; color: #334155; }
+    .section-body li       { margin-bottom: 0.3rem; }
+    .section-body strong   { color: #0f172a; }
+
+    /* ── Pricing table ──────────────────────────────────────────── */
+    .pricing-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .pricing-table th {
+      background: #0a1628; color: rgba(255,255,255,0.6);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 10px 14px; text-align: left;
+    }
+    .pricing-table td { padding: 11px 14px; border-bottom: 1px solid #f0f4f8; color: #334155; }
+    .pricing-table tr:last-child td { border-bottom: none; }
+    .pricing-table tr:hover td { background: #f8fafc; }
+    .pricing-table .amount { font-family: monospace; font-size: 13px; }
+    .pricing-total-row {
+      background: linear-gradient(135deg, #0a1628, #0d2137);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      margin-top: -1px;
+    }
+    .pricing-total-label { color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; }
+    .pricing-total-amount { color: white; font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .pricing-note { padding: 0.75rem 1.5rem; font-size: 12px; color: #64748b;
+                    border-top: 1px solid #f0f4f8; background: #fafbfc; }
+
+    /* ── Timeline ───────────────────────────────────────────────── */
+    .phases { display: flex; flex-direction: column; gap: 12px; }
+    .phase-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 18px; background: #fafbfc;
+      border: 1px solid #e8edf2; border-radius: 10px;
+    }
+    .phase-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--brand-light); color: var(--brand);
+      font-weight: 700; font-size: 13px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .phase-name { font-weight: 500; color: #0f172a; flex: 1; }
+    .phase-weeks {
+      font-size: 12px; font-weight: 600; color: var(--brand);
+      background: var(--brand-light); padding: 3px 10px; border-radius: 20px;
+    }
+    .phase-bar-container { height: 4px; background: #e8edf2; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+    .phase-bar { height: 100%; background: linear-gradient(90deg, var(--brand), var(--accent)); border-radius: 2px; }
+
+    /* ── CTA ────────────────────────────────────────────────────── */
+    .cta-strip {
+      background: linear-gradient(135deg, #0a1628, #0d2137);
+      border-radius: var(--r);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+    }
+    .cta-strip h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .cta-strip p  { color: rgba(255,255,255,0.5); margin-bottom: 2rem; }
+    .cta-buttons  { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Buttons ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 50px;
+      font-size: 15px; font-weight: 600;
+      border: none; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-accept {
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      color: white;
+      box-shadow: 0 6px 20px rgba(21,145,171,0.4);
+    }
+    .btn-accept:hover { box-shadow: 0 10px 28px rgba(21,145,171,0.5); }
+    .btn-negotiate {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .btn-negotiate:hover { background: rgba(255,255,255,0.14); }
+
+    /* ── Status banner ──────────────────────────────────────────── */
+    .status-banner {
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px; font-weight: 500;
+      margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .status-accepted  { background: #dcfce7; color: #166534; }
+    .status-expired   { background: #fef9c3; color: #854d0e; }
+    .status-negotiating { background: #dbeafe; color: #1e40af; }
+
+    /* ── Modal overlay ──────────────────────────────────────────── */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: white; border-radius: var(--r);
+      max-width: 480px; width: 100%;
+      padding: 2rem; box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    }
+    .modal h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .modal p  { color: #64748b; font-size: 14px; margin-bottom: 1.5rem; }
+    .modal textarea {
+      width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 10px 14px; font-family: inherit; font-size: 14px;
+      resize: none; outline: none; min-height: 100px; margin-bottom: 1rem;
+    }
+    .modal textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-light); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-sm { padding: 8px 18px; font-size: 14px; border-radius: 8px; }
+
+    /* ── Valid until warning ────────────────────────────────────── */
+    .valid-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: #64748b;
+      background: #f1f5f9; border-radius: 20px;
+      padding: 4px 12px; margin-top: 1rem;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    footer {
+      background: #0a1628;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      padding: 2rem;
+      font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .stat { padding: 0.75rem 1.2rem; }
+      .topbar { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="progress-bar"></div>
+
+  <!-- Sticky header -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="/assets/quotation_intelligence/images/logo.png"
+           class="topbar-logo"
+           onerror="this.style.display='none';document.getElementById('topbar-text').style.display='flex'"
+           alt="Logo" />
+      <span id="topbar-text" style="display:none;font-weight:700;font-size:15px;color:var(--brand)">
+        Extension ERP
+      </span>
+      <span style="color:#cbd5e1;font-size:14px">·</span>
+      <span class="topbar-title">{{ proposal.proposal_title or "Proposal" }}</span>
+    </div>
+    <div class="topbar-right" id="topbar-cta">
+      <!-- injected by JS after status check -->
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">Proposal · Confidential</div>
+    <h1>{{ proposal.client_name or "Your Proposal" }}</h1>
+    <p class="hero-sub">{{ proposal.proposal_title or "" }}</p>
+    <div class="hero-stats" id="hero-stats">
+      <!-- rendered by JS -->
+    </div>
+    {% if proposal.valid_until %}
+    <div class="valid-badge">
+      Valid until {{ proposal.valid_until }}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Main content -->
+  <div class="container">
+    <div class="sections" id="sections-container">
+      <div style="text-align:center;padding:4rem 0;color:#94a3b8">
+        Loading proposal…
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Prepared by {{ proposal.prepared_by or "Extension ERP" }} · Confidential ·
+    © {{ proposal.client_name or "" }}
+  </footer>
+
+  <!-- Accept modal -->
+  <div class="modal-backdrop" id="modal-accept">
+    <div class="modal">
+      <h3>Accept this Proposal</h3>
+      <p>By accepting, you confirm agreement to the scope, pricing, and terms outlined above.</p>
+      <div class="modal-actions">
+        <button class="btn btn-sm" style="background:#f1f5f9;color:#374151"
+                onclick="closeModal('modal-accept')">Cancel</button>
+        <button class="btn btn-sm btn-accept" onclick="confirmAccept()">
+          Confirm Acceptance
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Negotiate modal -->
+  <div class="modal-backdrop" id="modal-negotiate">
+    <div class="modal">
+      <h3>Request Changes</h3>
+      <p>Tell us what you'd like to discuss or adjust.</p>
+      <textarea id="negotiate-msg" placeholder="e.g. We'd like to adjust the timeline, or discuss the pricing…"></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-sm" style="background:#f1f5f9;color:#374151"
+                onclick="closeModal('modal-negotiate')">Cancel</button>
+        <button class="btn btn-sm btn-negotiate" style="background:#3b82f6;color:white"
+                onclick="confirmNegotiate()">
+          Send Request
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ── Proposal data injected by Python context ─────────────────────────────
+  var PROPOSAL      = {{ proposal_json }};
+  var PROPOSAL_NAME = "{{ proposal_name }}";
+  var SESSION_ID    = (Math.random().toString(36) + Date.now().toString(36)).slice(2, 18);
+
+  // ── Behaviour tracking ───────────────────────────────────────────────────
+  function track(event_type, section_id, value) {
+    fetch('/api/method/quotation_intelligence.api.proposal.log_event', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Frappe-CSRF-Token': 'fetch',
+      },
+      body: JSON.stringify({
+        proposal_name: PROPOSAL_NAME,
+        event: JSON.stringify({
+          event_type: event_type,
+          section_id: section_id || null,
+          value:      value      || null,
+          session_id: SESSION_ID,
+          timestamp:  new Date().toISOString(),
+        }),
+      }),
+    }).catch(function(){});
+  }
+
+  // Track page open immediately
+  track('page_open');
+
+  // ── Scroll progress bar ──────────────────────────────────────────────────
+  window.addEventListener('scroll', function () {
+    var scrolled = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    document.getElementById('progress-bar').style.width = (scrolled * 100) + '%';
+
+    // Scroll depth milestones
+    var pct = Math.round(scrolled * 100);
+    if (pct > 0 && pct % 25 === 0 && pct !== window._lastDepth) {
+      window._lastDepth = pct;
+      track('scroll_depth', null, pct);
+    }
+  });
+
+  // ── Section visibility tracking (IntersectionObserver) ──────────────────
+  var sectionTimes = {};
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var id = entry.target.dataset.sectionId;
+      if (entry.isIntersecting) {
+        sectionTimes[id] = Date.now();
+        track('section_view', id);
+      } else if (sectionTimes[id]) {
+        var secs = Math.round((Date.now() - sectionTimes[id]) / 1000);
+        if (secs >= 3) track('time_on_section', id, secs);
+        delete sectionTimes[id];
+      }
+    });
+  }, { threshold: 0.4 });
+
+  // ── Icon map ─────────────────────────────────────────────────────────────
+  var ICONS = {
+    hero:         '★', objectives: '◎', scope:      '▣',
+    approach:     '⟳', timeline:   '◷', team:       '◈',
+    commercials:  '₹', benefits:   '↑', case_studies:'◉',
+    technology:   '⚙', support:    '◌', terms:      '≡',
+    next_steps:   '→', commercials_section: '₹',
+    default:      '◆',
+  };
+
+  // ── Render sections ──────────────────────────────────────────────────────
+  function renderSections() {
+    var container = document.getElementById('sections-container');
+    var sections  = PROPOSAL.sections || [];
+    var status    = PROPOSAL.status   || '';
+
+    container.innerHTML = '';
+
+    // Status banner
+    if (status === 'Accepted') {
+      container.innerHTML += '<div class="status-banner status-accepted">✓ You have accepted this proposal. Our team will be in touch shortly.</div>';
+    } else if (status === 'Expired') {
+      container.innerHTML += '<div class="status-banner status-expired">⚠ This proposal has expired. Please contact us for an updated quote.</div>';
+    } else if (status === 'Negotiating') {
+      container.innerHTML += '<div class="status-banner status-negotiating">↔ Negotiation in progress. We\'ll respond shortly.</div>';
+    }
+
+    sections.forEach(function(section) {
+      var el = document.createElement('div');
+      el.className = 'section-card';
+      el.dataset.sectionId = section.id;
+
+      if (section.type === 'pricing') {
+        el.innerHTML = renderPricing(section);
+      } else if (section.type === 'timeline') {
+        el.innerHTML = renderTimeline(section);
+      } else {
+        el.innerHTML = renderText(section);
+      }
+
+      container.appendChild(el);
+      observer.observe(el);
+    });
+
+    // CTA section
+    if (status !== 'Accepted' && status !== 'Expired') {
+      var cta = document.createElement('div');
+      cta.className = 'cta-strip';
+      cta.dataset.sectionId = 'cta';
+      cta.innerHTML = renderCTA();
+      container.appendChild(cta);
+      observer.observe(cta);
+    }
+  }
+
+  function renderText(section) {
+    var icon = ICONS[section.id] || ICONS.default;
+    var content = section.content || '';
+
+    // Convert markdown-ish content to HTML
+    content = content
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>')
+      .replace(/\n\n/g, '</p><p>')
+
+    // Wrap in paragraphs if not already HTML
+    if (!content.includes('<p>') && !content.includes('<ul>') && !content.includes('<h3>')) {
+      content = '<p>' + content + '</p>'
+    }
+
+    return '<div class="section-header">' +
+             '<div class="section-icon">' + icon + '</div>' +
+             '<span class="section-title">' + escHtml(section.title || '') + '</span>' +
+           '</div>' +
+           '<div class="section-body">' + content + '</div>'
+  }
+
+  function renderPricing(section) {
+    var items    = section.pricing_items || [];
+    var currency = section.currency || PROPOSAL.currency || 'USD';
+    var subtotal = section.subtotal || 0;
+    var total    = section.total    || subtotal;
+    var taxRate  = section.tax_rate  || 0;
+    var taxAmt   = section.tax_applicable ? Math.round(subtotal * taxRate / 100) : 0;
+
+    var rows = items.map(function(it) {
+      var line = Math.round((it.qty || 1) * (it.unit_price || 0) * (1 - (it.discount || 0) / 100));
+      return '<tr>' +
+        '<td><strong>' + escHtml(it.description || '') + '</strong></td>' +
+        '<td>' + escHtml(it.category || '') + '</td>' +
+        '<td class="amount">' + escHtml(String(it.qty || 1)) + '</td>' +
+        '<td class="amount">' + currency + ' ' + num(it.unit_price || 0) + '</td>' +
+        '<td class="amount">' + (it.discount ? it.discount + '%' : '—') + '</td>' +
+        '<td class="amount"><strong>' + currency + ' ' + num(line) + '</strong></td>' +
+        '</tr>'
+    }).join('')
+
+    return '<div class="section-header">' +
+             '<div class="section-icon">₹</div>' +
+             '<span class="section-title">Commercial Proposal</span>' +
+           '</div>' +
+           '<table class="pricing-table">' +
+             '<thead><tr>' +
+               '<th>Description</th><th>Category</th><th>Qty</th>' +
+               '<th>Unit Price</th><th>Disc.</th><th>Total</th>' +
+             '</tr></thead>' +
+             '<tbody>' + rows + '</tbody>' +
+           '</table>' +
+           (section.tax_applicable ? '<div class="pricing-note">Tax (' + taxRate + '%): ' + currency + ' ' + num(taxAmt) + '</div>' : '') +
+           (section.payment_terms ? '<div class="pricing-note">Payment: ' + escHtml(section.payment_terms) + '</div>' : '') +
+           '<div class="pricing-total-row">' +
+             '<span class="pricing-total-label">Total Investment</span>' +
+             '<span class="pricing-total-amount">' + currency + ' ' + num(Math.round(total + taxAmt)) + '</span>' +
+           '</div>'
+  }
+
+  function renderTimeline(section) {
+    var phases    = section.phases || [];
+    var totalWks  = section.total_weeks || phases.reduce(function(s,p){ return s + (p.weeks||0); }, 0);
+
+    var phaseHTML = phases.map(function(ph, i) {
+      var pct = totalWks ? Math.round((ph.weeks || 0) / totalWks * 100) : 20;
+      return '<div class="phase-row">' +
+               '<div class="phase-num">' + (i + 1) + '</div>' +
+               '<div class="phase-name">' + escHtml(ph.name || 'Phase ' + (i+1)) + '</div>' +
+               '<div>' +
+                 '<div class="phase-bar-container"><div class="phase-bar" style="width:' + pct + '%"></div></div>' +
+               '</div>' +
+               '<div class="phase-weeks">' + (ph.weeks || 0) + ' wks</div>' +
+             '</div>'
+    }).join('')
+
+    var goLive = section.go_live ? '<div class="pricing-note">Go-live: ' + section.go_live + '  ·  Total: ' + totalWks + ' weeks</div>' : ''
+
+    return '<div class="section-header">' +
+             '<div class="section-icon">◷</div>' +
+             '<span class="section-title">Project Timeline</span>' +
+           '</div>' +
+           '<div class="section-body">' +
+             '<div class="phases">' + phaseHTML + '</div>' +
+           '</div>' + goLive
+  }
+
+  function renderCTA() {
+    return '<h2>Ready to move forward?</h2>' +
+           '<p>Accept this proposal or reach out to discuss any adjustments.</p>' +
+           '<div class="cta-buttons">' +
+             '<button class="btn btn-accept" onclick="openModal(\'modal-accept\'); track(\'cta_click\',\'accept\')">' +
+               '✓ Accept this Proposal' +
+             '</button>' +
+             '<button class="btn btn-negotiate" onclick="openModal(\'modal-negotiate\'); track(\'cta_click\',\'negotiate\')">' +
+               '↔ Request Changes' +
+             '</button>' +
+           '</div>'
+  }
+
+  // ── Hero stats ────────────────────────────────────────────────────────────
+  function renderHeroStats() {
+    var sections = PROPOSAL.sections || [];
+    var pricing  = sections.find(function(s){ return s.type === 'pricing' });
+    var timeline = sections.find(function(s){ return s.type === 'timeline' });
+    var currency = PROPOSAL.currency || 'USD';
+
+    var stats = [];
+    stats.push({ val: sections.length,          lbl: 'Sections' });
+    if (timeline) stats.push({ val: (timeline.total_weeks || '—') + ' wks', lbl: 'Timeline' });
+    if (pricing)  stats.push({ val: currency + ' ' + num(Math.round(pricing.total || pricing.subtotal || 0)), lbl: 'Investment' });
+    if (PROPOSAL.valid_until) stats.push({ val: PROPOSAL.valid_until, lbl: 'Valid Until' });
+
+    document.getElementById('hero-stats').innerHTML = stats.map(function(s){
+      return '<div class="stat"><div class="stat-val">' + s.val + '</div><div class="stat-lbl">' + s.lbl + '</div></div>'
+    }).join('')
+  }
+
+  // ── Topbar CTA ────────────────────────────────────────────────────────────
+  function renderTopbarCTA() {
+    var status = PROPOSAL.status || '';
+    var el = document.getElementById('topbar-cta');
+    if (status === 'Accepted') {
+      el.innerHTML = '<span style="color:#16a34a;font-size:13px;font-weight:600">✓ Accepted</span>';
+    } else if (status !== 'Expired') {
+      el.innerHTML = '<button class="btn btn-accept" style="padding:8px 18px;font-size:13px;border-radius:8px" ' +
+                     'onclick="openModal(\'modal-accept\')">Accept Proposal</button>';
+    }
+  }
+
+  // ── Modal helpers ─────────────────────────────────────────────────────────
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function confirmAccept() {
+    closeModal('modal-accept');
+    track('accept');
+
+    fetch('/api/method/quotation_intelligence.api.proposal.update_status', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'X-Frappe-CSRF-Token': 'fetch' },
+      body: JSON.stringify({ name: PROPOSAL_NAME, status: 'Accepted' }),
+    }).then(function() {
+      PROPOSAL.status = 'Accepted';
+      renderSections();
+      renderTopbarCTA();
+    });
+  }
+
+  function confirmNegotiate() {
+    var msg = document.getElementById('negotiate-msg').value;
+    closeModal('modal-negotiate');
+    track('negotiate', null, msg);
+
+    fetch('/api/method/quotation_intelligence.api.proposal.update_status', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'X-Frappe-CSRF-Token': 'fetch' },
+      body: JSON.stringify({ name: PROPOSAL_NAME, status: 'Negotiating' }),
+    }).then(function() {
+      PROPOSAL.status = 'Negotiating';
+      renderSections();
+      renderTopbarCTA();
+    });
+  }
+
+  // ── Utility ───────────────────────────────────────────────────────────────
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function num(n) {
+    return Number(n).toLocaleString('en-IN');
+  }
+
+  // ── Close modals on backdrop click ────────────────────────────────────────
+  document.querySelectorAll('.modal-backdrop').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      if (e.target === el) el.classList.remove('open');
+    });
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  renderHeroStats();
+  renderTopbarCTA();
+  renderSections();
+
+  // Page unload — track time spent on last visible section
+  window.addEventListener('beforeunload', function() {
+    track('page_close');
+    Object.keys(sectionTimes).forEach(function(id) {
+      var secs = Math.round((Date.now() - sectionTimes[id]) / 1000);
+      if (secs >= 2) track('time_on_section', id, secs);
+    });
+  });
+  </script>
+</body>
+</html>

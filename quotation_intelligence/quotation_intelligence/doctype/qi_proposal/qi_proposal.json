@@ -1,0 +1,275 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:QI-{YYYY}-{#####}",
+ "creation": "2026-04-06 15:49:13.535096",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_afzk",
+  "amended_from",
+  "proposal_title",
+  "client_name",
+  "status",
+  "column_break_bpsk",
+  "industry",
+  "currency",
+  "total_value",
+  "sec_crm",
+  "lead",
+  "opportunity",
+  "customer",
+  "column_break_bfdy",
+  "contact_name",
+  "contact_email",
+  "sec_dates",
+  "prepared_by",
+  "valid_until",
+  "column_break_ksxq",
+  "sent_on",
+  "viewed_at",
+  "accepted_at",
+  "sec_content",
+  "prompt_config",
+  "proposal_json",
+  "form_data_json",
+  "section_break_nyan",
+  "view_count",
+  "total_time_on_page",
+  "last_section",
+  "column_break_lwub",
+  "sections_viewed",
+  "sec_notes",
+  "internal_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_afzk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "QI Proposal",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "proposal_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Proposal Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "client_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Client Name",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nSent\nViewed\nNegotiating\nAccepted\nRejected\nExpired"
+  },
+  {
+   "fieldname": "column_break_bpsk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "industry",
+   "fieldtype": "Link",
+   "label": "Industry",
+   "options": "Industry Type"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "total_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Value"
+  },
+  {
+   "fieldname": "sec_crm",
+   "fieldtype": "Section Break",
+   "label": "CRM Links"
+  },
+  {
+   "fieldname": "lead",
+   "fieldtype": "Link",
+   "label": "Lead",
+   "options": "Lead"
+  },
+  {
+   "fieldname": "opportunity",
+   "fieldtype": "Link",
+   "label": "Opportunity",
+   "options": "Opportunity"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "column_break_bfdy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contact_name",
+   "fieldtype": "Data",
+   "label": "Contact Name"
+  },
+  {
+   "fieldname": "contact_email",
+   "fieldtype": "Data",
+   "label": "Contact Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "sec_dates",
+   "fieldtype": "Section Break",
+   "label": "Dates & Owner"
+  },
+  {
+   "fieldname": "prepared_by",
+   "fieldtype": "Data",
+   "label": "Prepared By"
+  },
+  {
+   "fieldname": "valid_until",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Valid Until"
+  },
+  {
+   "fieldname": "column_break_ksxq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sent_on",
+   "fieldtype": "Datetime",
+   "label": "Sent on",
+   "read_only": 1
+  },
+  {
+   "fieldname": "viewed_at",
+   "fieldtype": "Datetime",
+   "label": "First Viewed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "accepted_at",
+   "fieldtype": "Datetime",
+   "label": "Accepted On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sec_content",
+   "fieldtype": "Section Break",
+   "label": "Generated Content"
+  },
+  {
+   "fieldname": "prompt_config",
+   "fieldtype": "Link",
+   "label": "Prompt Config Used",
+   "options": "QI Prompt Config",
+   "read_only": 1
+  },
+  {
+   "description": "Full structured JSON returned by AI",
+   "fieldname": "proposal_json",
+   "fieldtype": "JSON",
+   "label": "Proposal JSON"
+  },
+  {
+   "description": "Snapshot of the form data used to generate this proposal",
+   "fieldname": "form_data_json",
+   "fieldtype": "JSON",
+   "label": "Form Data JSON"
+  },
+  {
+   "fieldname": "section_break_nyan",
+   "fieldtype": "Section Break",
+   "label": "Behaviour Tracking"
+  },
+  {
+   "fieldname": "view_count",
+   "fieldtype": "Int",
+   "label": "View Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_time_on_page",
+   "fieldtype": "Int",
+   "label": "Total Time on Page (seconds)"
+  },
+  {
+   "fieldname": "column_break_lwub",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sections_viewed",
+   "fieldtype": "Small Text",
+   "label": "Sections Viewed (JSON)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_section",
+   "fieldtype": "Data",
+   "label": "Last Section Viewed"
+  },
+  {
+   "fieldname": "internal_notes",
+   "fieldtype": "Small Text",
+   "label": "Internal Notes"
+  },
+  {
+   "fieldname": "sec_notes",
+   "fieldtype": "Section Break",
+   "label": "Internal"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-08 18:14:43.129014",
+ "modified_by": "Administrator",
+ "module": "Quotation Intelligence",
+ "name": "QI Proposal",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_views": 1
+}

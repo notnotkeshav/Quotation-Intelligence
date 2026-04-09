@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* ── Tailwind v4 dark mode via .dark class ─────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --qi-primary:       #1591AB;
+  --qi-primary-deep:  #0c6478;
+  --qi-primary-bright:#22b5d4;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { @apply bg-transparent; }
+::-webkit-scrollbar-thumb { @apply bg-gray-300 dark:bg-gray-700 rounded-full; }
+
+@layer utilities {
+  .brand-gradient {
+    background: linear-gradient(135deg, var(--qi-primary-deep), var(--qi-primary), var(--qi-primary-bright));
+  }
+  .card {
+    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl;
+  }
+  .input {
+    @apply w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700
+           bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+           placeholder-gray-400 dark:placeholder-gray-500
+           focus:outline-none focus:ring-2 focus:ring-[#1591AB]/40 focus:border-[#1591AB]
+           transition text-sm disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .label {
+    @apply block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white
+           bg-[#1591AB] hover:bg-[#0c6478] active:scale-[0.98] transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
+           text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800
+           hover:bg-gray-200 dark:hover:bg-gray-700 active:scale-[0.98] transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
+           text-white bg-red-500 hover:bg-red-600 active:scale-[0.98] transition-all duration-150;
+  }
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+}

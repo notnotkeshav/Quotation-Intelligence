@@ -1,0 +1,16 @@
+{
+  "name": "quotation_intelligence",
+  "version": "1.0.0",
+  "description": "AI-Powered proposal generation system for Frappe.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd proposal && yarn install",
+    "dev": "cd proposal && yarn dev",
+    "build": "cd proposal && yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

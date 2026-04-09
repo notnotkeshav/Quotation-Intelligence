@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quotation Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!--
+      DEV MODE ONLY — this index.html is the Vite dev server entry point.
+      In production (Frappe), the entry points are:
+        www/proposal/create.html   → /proposal/create
+        www/proposal/settings.html → /proposal/settings
+      Those files are Jinja-rendered and inject window.frappe.csrf_token properly.
+
+      In dev mode we proxy /proposal/* to Frappe via vite.config.js,
+      so the real www page is served by Frappe and provides the CSRF token.
+      This file is only used when accessing http://localhost:8080 directly.
+    -->
+
+  <script>
+    // Sync theme before React renders
+    (function () {
+      try {
+        var saved = localStorage.getItem('qi-theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) { }
+    })();
+  </script>
+  <script type="module" crossorigin src="/assets/quotation_intelligence/proposal/assets/index-BvIPQTYW.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/quotation_intelligence/proposal/assets/rolldown-runtime-DF2fYuay.js">
+  <link rel="modulepreload" crossorigin href="/assets/quotation_intelligence/proposal/assets/dndkit-DhY8tVWN.js">
+  <link rel="modulepreload" crossorigin href="/assets/quotation_intelligence/proposal/assets/frappe-DpZkbqe7.js">
+  <link rel="modulepreload" crossorigin href="/assets/quotation_intelligence/proposal/assets/vendor-DDlUR8qu.js">
+  <link rel="stylesheet" crossorigin href="/assets/quotation_intelligence/proposal/assets/index-DDNZPp55.css">
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>

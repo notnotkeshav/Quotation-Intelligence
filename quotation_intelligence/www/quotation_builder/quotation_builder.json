@@ -1,0 +1,14 @@
+{
+ "doctype": "Page",
+ "name": "quotation-builder",
+ "page_name": "quotation-builder",
+ "title": "Quotation Builder",
+ "module": "Quotation Intelligence",
+ "standard": "Yes",
+ "system_page": 0,
+ "roles": [
+  {"role": "System Manager"},
+  {"role": "Sales Manager"},
+  {"role": "Sales User"}
+ ]
+}

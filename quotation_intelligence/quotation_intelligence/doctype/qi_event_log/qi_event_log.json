@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-04-06 15:23:44.829180",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "proposal",
+  "event_type",
+  "section_id",
+  "value",
+  "timestamp",
+  "session_id",
+  "extra"
+ ],
+ "fields": [
+  {
+   "fieldname": "proposal",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Proposal",
+   "options": "QI Proposal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_type",
+   "fieldtype": "Select",
+   "label": "Event Type",
+   "options": "page_open\npage_close\nsection_view\nscroll_depth\ntime_on_section\ncta_click\naccept\nnegotiate\ndownload"
+  },
+  {
+   "fieldname": "section_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Section ID"
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Data",
+   "label": "Value"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Timestamp"
+  },
+  {
+   "fieldname": "session_id",
+   "fieldtype": "Data",
+   "label": "Session ID"
+  },
+  {
+   "fieldname": "extra",
+   "fieldtype": "Small Text",
+   "label": "Extra Data (JSON)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-06 16:15:10.989162",
+ "modified_by": "Administrator",
+ "module": "Quotation Intelligence",
+ "name": "QI Event Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_views": 1
+}

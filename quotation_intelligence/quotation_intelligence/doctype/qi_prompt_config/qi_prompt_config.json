@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-04-06 15:31:22.365025",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "industry_id",
+  "version_label",
+  "is_default",
+  "sec_style",
+  "tone",
+  "palette",
+  "column_break_wctr",
+  "primary_color",
+  "accent_color",
+  "sec_sections",
+  "enabled_sections",
+  "column_break_fflz",
+  "section_order",
+  "sec_ai",
+  "focus_areas",
+  "custom_instructions",
+  "restrictions"
+ ],
+ "fields": [
+  {
+   "fieldname": "industry_id",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Industry",
+   "options": "Industry Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "version_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Version Label",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Default for Industry"
+  },
+  {
+   "fieldname": "sec_style",
+   "fieldtype": "Section Break",
+   "label": "Style & Tone"
+  },
+  {
+   "fieldname": "tone",
+   "fieldtype": "Select",
+   "label": "Tone",
+   "options": "\nconsultative\nformal\nconfident\nfriendly\ntechnical"
+  },
+  {
+   "fieldname": "column_break_wctr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "palette",
+   "fieldtype": "Data",
+   "label": "Palette ID"
+  },
+  {
+   "fieldname": "primary_color",
+   "fieldtype": "Color",
+   "label": "Primary Color"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent Color"
+  },
+  {
+   "fieldname": "sec_sections",
+   "fieldtype": "Section Break",
+   "label": "Section Configuration"
+  },
+  {
+   "description": "JSON array of section IDs, e.g. [\"hero\",\"objectives\",\"scope\"]",
+   "fieldname": "enabled_sections",
+   "fieldtype": "Small Text",
+   "label": "Enabled Sections"
+  },
+  {
+   "fieldname": "column_break_fflz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "SON array defining display order",
+   "fieldname": "section_order",
+   "fieldtype": "Small Text",
+   "label": "Section Order"
+  },
+  {
+   "fieldname": "sec_ai",
+   "fieldtype": "Section Break",
+   "label": "AI Instructions"
+  },
+  {
+   "description": "JSON array, e.g. [\"ROI & Cost Savings\",\"Automation\"]",
+   "fieldname": "focus_areas",
+   "fieldtype": "Small Text",
+   "label": "Focus Areas"
+  },
+  {
+   "description": "Full system prompt sent to the AI for this industry",
+   "fieldname": "custom_instructions",
+   "fieldtype": "Long Text",
+   "label": "Master Prompt / System Instructions"
+  },
+  {
+   "description": "JSON array of things to avoid",
+   "fieldname": "restrictions",
+   "fieldtype": "Small Text",
+   "label": "Restrictions"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-08 15:26:35.723796",
+ "modified_by": "Administrator",
+ "module": "Quotation Intelligence",
+ "name": "QI Prompt Config",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "version_label",
+ "track_changes": 1,
+ "track_views": 1
+}

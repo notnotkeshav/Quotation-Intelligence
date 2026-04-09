@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ ui.meta.client_name }} Proposal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;1,900&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--brand:#1591AB;
+--brand-deep:#0c6478;
+--brand-bright:#22b5d4;
+--navy:#060f18;
+--body-bg:#f2f5f8;
+--card:#ffffff;
+--text:#101e2b;
+--muted:#607080;
+--r:14px;
+}
+
+body{
+margin:0;
+font-family:"Plus Jakarta Sans",sans-serif;
+background:var(--body-bg);
+color:var(--text);
+}
+
+/* PROGRESS */
+#prog{
+position:fixed;
+top:0;
+left:0;
+height:3px;
+width:0%;
+z-index:999;
+background:linear-gradient(90deg,#0c6478,#1591AB,#22b5d4);
+}
+
+/* NAV */
+.nav{
+position:fixed;
+top:0;
+width:100%;
+padding:14px 40px;
+display:flex;
+justify-content:space-between;
+z-index:100;
+transition:0.3s;
+}
+
+.nav.stuck{
+background:rgba(6,15,24,0.9);
+backdrop-filter:blur(20px);
+}
+
+.nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+/* HERO */
+.hero{
+height:100vh;
+background:radial-gradient(ellipse at top,#0d3a52,#060f18);
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
+padding:120px 20px;
+}
+
+.hero h1{
+font-family:"Fraunces",serif;
+font-size:64px;
+font-weight:900;
+margin:0;
+}
+
+.hero p{
+color:rgba(255,255,255,0.6);
+}
+
+/* SECTION */
+.section{
+padding:80px 40px;
+max-width:1100px;
+margin:auto;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:24px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,0.05);
+}
+
+/* TIMELINE */
+.timeline{
+display:flex;
+gap:20px;
+overflow:auto;
+}
+
+.phase{
+background:white;
+padding:20px;
+border-radius:16px;
+min-width:200px;
+}
+
+/* PRICING */
+.table{
+width:100%;
+border-collapse:collapse;
+}
+
+.table td,.table th{
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="prog"></div>
+
+<div class="nav" id="nav">
+<div>{{ ui.meta.vendor_name }}</div>
+<div>
+<a href="#obj">Objective</a>
+<a href="#scope">Scope</a>
+<a href="#tl">Timeline</a>
+<a href="#price">Pricing</a>
+</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+<div>
+<h1>{{ ui.meta.client_name }}</h1>
+<p>{{ ui.hero.project_type }}</p>
+</div>
+</div>
+
+<!-- OBJECTIVE -->
+<div class="section" id="obj">
+<h2>Objective</h2>
+<div class="cards">
+{% for o in ui.objective %}
+<div class="card">
+<h3>{{ o.title }}</h3>
+<p>{{ o.desc }}</p>
+</div>
+{% endfor %}
+</div>
+</div>
+
+<!-- SCOPE -->
+<div class="section" id="scope">
+<h2>Scope</h2>
+{% for s in ui.scope %}
+<div class="card">
+<h3>{{ s.module }}</h3>
+<ul>
+{% for i in s.items %}
+<li>{{ i }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endfor %}
+</div>
+
+<!-- TIMELINE -->
+<div class="section" id="tl">
+<h2>Timeline</h2>
+<div class="timeline">
+{% for p in ui.timeline %}
+<div class="phase">
+<strong>{{ p.name }}</strong>
+<div>{{ p.weeks }} weeks</div>
+</div>
+{% endfor %}
+</div>
+</div>
+
+<!-- PRICING -->
+<div class="section" id="price">
+<h2>Pricing</h2>
+<table class="table">
+<tr>
+<th>Description</th>
+<th>Total</th>
+</tr>
+{% for item in ui.pricing %}
+<tr>
+<td>{{ item.description }}</td>
+<td>{{ item.unit_price }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<script>
+const prog = document.getElementById("prog");
+const nav = document.getElementById("nav");
+
+window.addEventListener("scroll",()=>{
+const h = document.documentElement;
+const sc = (h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+prog.style.width = sc + "%";
+
+if(window.scrollY>50) nav.classList.add("stuck");
+else nav.classList.remove("stuck");
+});
+</script>
+
+</body>
+</html>

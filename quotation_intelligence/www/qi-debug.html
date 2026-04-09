@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>QI Debug — CSRF Check</title>
+  <style>
+    body { font-family: monospace; padding: 2rem; background: #0f172a; color: #e2e8f0; }
+    h2  { color: #38bdf8; }
+    .ok   { color: #4ade80; }
+    .fail { color: #f87171; }
+    .warn { color: #fb923c; }
+    pre  { background: #1e293b; padding: 1rem; border-radius: 8px; overflow: auto; }
+    button { background: #0ea5e9; color: white; border: none; padding: 8px 18px;
+             border-radius: 6px; cursor: pointer; font-size: 14px; margin: 4px; }
+    button:hover { background: #0284c7; }
+  </style>
+</head>
+<body>
+  <h2>Quotation Intelligence — CSRF Debug</h2>
+  <pre id="out">Loading...</pre>
+  <button onclick="testPost()">Test POST (whitelisted method)</button>
+  <button onclick="testGetUser()">Test get_logged_user</button>
+  <button onclick="location.reload()">Reload</button>
+
+  <script>
+    window.frappe = window.frappe || {};
+    window.frappe.csrf_token = "{{ csrf_token }}";
+    window.frappe.boot = {{ boot | tojson(indent=None) }};
+  </script>
+
+  <script>
+    function log(text, cls) {
+      var el = document.getElementById('out');
+      el.innerHTML += '<span class="' + (cls||'') + '">' +
+        String(text).replace(/</g,'&lt;') + '\n</span>';
+    }
+
+    function getCsrfToken() {
+      if (window.frappe?.csrf_token && window.frappe.csrf_token !== 'None')
+        return window.frappe.csrf_token;
+      var m = document.cookie.match(/(?:^|;\s*)csrf_token=([^;]+)/);
+      if (m && m[1] !== 'None') return decodeURIComponent(m[1]);
+      return 'fetch';
+    }
+
+    window.addEventListener('load', function() {
+      document.getElementById('out').innerHTML = '';
+      log('=== CSRF Token Sources ===', '');
+      log('window.frappe.csrf_token : ' + (window.frappe?.csrf_token || 'NOT SET'),
+          window.frappe?.csrf_token && window.frappe.csrf_token !== 'None' ? 'ok' : 'fail');
+      var ck = document.cookie.match(/csrf_token=([^;]+)/);
+      log('Cookie csrf_token        : ' + (ck ? decodeURIComponent(ck[1]) : 'NOT SET'),
+          ck ? 'ok' : 'warn');
+      log('Resolved token to use    : ' + getCsrfToken(), 'ok');
+      log('');
+      log('=== Boot Data ===', '');
+      log('site_name  : ' + (window.frappe?.boot?.site_name || '-'));
+      log('user       : ' + (window.frappe?.boot?.user || '-'));
+      log('');
+      log('=== Cookies ===', '');
+      log(document.cookie || '(no cookies)');
+    });
+
+    async function testPost() {
+      log('\n=== POST Test ===');
+      try {
+        var token = getCsrfToken();
+        log('Using token: ' + token);
+        var res = await fetch('/api/method/frappe.auth.get_logged_user', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Frappe-CSRF-Token': token,
+          },
+          body: '{}',
+        });
+        var data = await res.json();
+        if (res.ok) {
+          log('POST SUCCESS: ' + JSON.stringify(data), 'ok');
+        } else {
+          log('POST FAILED ' + res.status + ': ' + JSON.stringify(data), 'fail');
+        }
+      } catch(e) {
+        log('POST ERROR: ' + e.message, 'fail');
+      }
+    }
+
+    async function testGetUser() {
+      log('\n=== GET logged user ===');
+      try {
+        var res = await fetch('/api/method/frappe.auth.get_logged_user', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        var data = await res.json();
+        log('GET ' + res.status + ': ' + JSON.stringify(data), res.ok ? 'ok' : 'fail');
+      } catch(e) {
+        log('GET ERROR: ' + e.message, 'fail');
+      }
+    }
+  </script>
+</body>
+</html>

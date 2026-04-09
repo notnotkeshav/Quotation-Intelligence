@@ -1,0 +1,44 @@
+{
+  "_dndkit-DhY8tVWN.js": {
+    "file": "assets/dndkit-DhY8tVWN.js",
+    "name": "dndkit",
+    "imports": [
+      "_rolldown-runtime-DF2fYuay.js"
+    ]
+  },
+  "_frappe-DpZkbqe7.js": {
+    "file": "assets/frappe-DpZkbqe7.js",
+    "name": "frappe",
+    "imports": [
+      "_dndkit-DhY8tVWN.js",
+      "_rolldown-runtime-DF2fYuay.js"
+    ]
+  },
+  "_rolldown-runtime-DF2fYuay.js": {
+    "file": "assets/rolldown-runtime-DF2fYuay.js",
+    "name": "rolldown-runtime"
+  },
+  "_vendor-DDlUR8qu.js": {
+    "file": "assets/vendor-DDlUR8qu.js",
+    "name": "vendor",
+    "imports": [
+      "_dndkit-DhY8tVWN.js",
+      "_rolldown-runtime-DF2fYuay.js"
+    ]
+  },
+  "index.html": {
+    "file": "assets/index-BvIPQTYW.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_frappe-DpZkbqe7.js",
+      "_dndkit-DhY8tVWN.js",
+      "_rolldown-runtime-DF2fYuay.js",
+      "_vendor-DDlUR8qu.js"
+    ],
+    "css": [
+      "assets/index-DDNZPp55.css"
+    ]
+  }
+}
